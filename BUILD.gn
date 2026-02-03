@@ -1,0 +1,130 @@
+# Copyright (c) 2026 vivo Mobile Communication Co., Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/boards/${board}.gni")
+import("//build/templates/build_template.gni")
+
+if (chip == "esp32c3") {
+  _include_headers = [
+    "components/esp_hal_uart/include",
+    "components/esp_hal_uart/esp32c3/include",
+    "components/soc/esp32c3/register",
+    "components/hal/platform_port/include",
+    "components/soc/esp32c3/include",
+    "components/esp_hw_support/include",
+    "components/log/include",
+    "components/esp_rom/include",
+    "components/esp_hw_support/port/esp32c3/include",
+    "components/esp_hal_clock/include",
+    "components/esp_hal_clock/esp32c3/include",
+    "components/hal/esp32c3/include",
+    "components/esp_rom/esp32c3/include",
+    "components/esp_hw_support/port/include",
+    "components/esp_hal_rtc_timer/esp32c3/include",
+    "components/esp_hal_timg/esp32c3/include",
+    "components/esp_rom/esp32c3",
+    "components/esp_system/include",
+    "components/riscv/include",
+    "components/soc/include",
+    "components/esp_rom/esp32c3/include/esp32c3",
+    "components/esp_hal_gpio/include",
+    "components/hal/esp32c3/include",
+    "components/esp_hw_support/include/esp_private",
+    "components/esp_hal_wdt/esp32c3/include",
+    "components/esp_hal_wdt/include",
+    "components/hal/include",
+    "."
+  ]
+  _src_files = [
+    "components/esp_hal_uart/uart_hal.c",
+    "components/esp_hal_uart/uart_hal_iram.c",
+    # "components/esp_hw_support/cpu.c",
+    # "components/esp_hw_support/clk_ctrl_os.c",
+    "components/esp_hw_support/esp_clk.c",
+    # "components/esp_hw_support/hw_random.c",
+    # "components/esp_hw_support/mac_addr.c",
+    "components/esp_hw_support/periph_ctrl.c",
+    # "components/esp_hw_support/rtc_module.c",
+    # "components/esp_hw_support/regi2c_ctrl.c",
+    # "components/esp_hw_support/sar_periph_ctrl_common.c",
+    # "components/esp_hw_support/sleep_modes.c",
+    "components/esp_hw_support/port/esp_clk_tree_common.c",
+    # "components/esp_hw_support/port/esp32c3/cpu_region_protect.c",
+    "components/esp_hw_support/port/esp32c3/esp_clk_tree.c",
+    # "components/esp_hw_support/port/esp32c3/esp_cpu_intr.c",
+    # "components/esp_hw_support/port/esp32c3/rtc_init.c",
+    "components/esp_hw_support/port/esp32c3/rtc_clk.c",
+    # "components/esp_hw_support/port/esp32c3/rtc_clk_init.c",
+    "components/esp_hw_support/port/esp32c3/rtc_time.c",
+    # "components/esp_hw_support/port/esp32c3/rtc_sleep.c",
+    # "components/esp_hw_support/port/esp32c3/sar_periph_ctrl.c",
+    # "components/esp_hw_support/port/esp32c3/systimer.c",
+
+    # "components/log/log_noos.c",
+    # "components/log/log.c",
+    "components/esp_hal_clock/esp32c3/clk_tree_hal.c",
+
+
+  ]
+  _cflags = [
+    "-DCONFIG_IDF_TARGET_ARCH_RISCV",
+    "-DCONFIG_SOC_SERIES_ESP32C3",
+    "-DESP_PLATFORM",
+    "-DNON_OS_BUILD=1",
+    "-Dasm=__asm__",
+  ]
+} else {
+  _include_headers = []
+  _cflags = []
+  _src_files = []
+}
+
+_include_headers += [
+  "components/esp_common/include",
+]
+
+static_library("hal_espressif") {
+  sources = [
+    "helpers.c",
+  ]
+  sources += _src_files
+  include_dirs = _include_headers
+  cflags = _cflags
+  configs += [ "//build/boards/${board}:kernel_config" ]
+}
+
+bindgen("hal_espressif_header") {
+  bindgen_flags = [
+    "--use-core",
+    "--ctypes-prefix",
+    "core::ffi",
+    "--blocklist-function",
+    "strtold",
+    "--blocklist-function",
+    "_strtold_r",
+    "--blocklist-file",
+    "esp_compiler.h",
+  ]
+  sources = [ "hal_headers.h" ]
+  configs += [ "//build/boards/${board}:kernel_config" ]
+  include_dirs = _include_headers
+}
+
+build_rust("hal_espressif_rs") {
+  crate_type = "rlib"
+  sources = [ "src/lib.rs" ]
+  deps = [ ":hal_espressif_header" ]
+  output_file = get_target_outputs(":hal_espressif_header")
+  rustenv = [ "BINDGEN_DIR=" + rebase_path(output_file[0]) ]
+}

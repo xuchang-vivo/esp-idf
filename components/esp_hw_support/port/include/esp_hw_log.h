@@ -20,11 +20,17 @@
 #define ESP_HW_LOG_ATTR_TAG(tag, str)      ESP_LOG_ATTR_TAG(tag, str)
 #define ESP_HW_LOG_ATTR_TAG_DRAM(tag, str) ESP_LOG_ATTR_TAG_DRAM(tag, str)
 
-#define ESP_HW_LOGE(tag, fmt, ...) ESP_EARLY_LOGE(tag, fmt, ##__VA_ARGS__)
-#define ESP_HW_LOGW(tag, fmt, ...) ESP_EARLY_LOGW(tag, fmt, ##__VA_ARGS__)
-#define ESP_HW_LOGI(tag, fmt, ...) ESP_EARLY_LOGI(tag, fmt, ##__VA_ARGS__)
-#define ESP_HW_LOGD(tag, fmt, ...) ESP_EARLY_LOGD(tag, fmt, ##__VA_ARGS__)
-#define ESP_HW_LOGV(tag, fmt, ...) ESP_EARLY_LOGV(tag, fmt, ##__VA_ARGS__)
+// #define ESP_HW_LOGE(tag, fmt, ...) ESP_EARLY_LOGE(tag, fmt, ##__VA_ARGS__)
+// #define ESP_HW_LOGW(tag, fmt, ...) ESP_EARLY_LOGW(tag, fmt, ##__VA_ARGS__)
+// #define ESP_HW_LOGI(tag, fmt, ...) ESP_EARLY_LOGI(tag, fmt, ##__VA_ARGS__)
+// #define ESP_HW_LOGD(tag, fmt, ...) ESP_EARLY_LOGD(tag, fmt, ##__VA_ARGS__)
+// #define ESP_HW_LOGV(tag, fmt, ...) ESP_EARLY_LOGV(tag, fmt, ##__VA_ARGS__)
+
+#define ESP_HW_LOGE(tag, fmt, ...)
+#define ESP_HW_LOGW(tag, fmt, ...)
+#define ESP_HW_LOGI(tag, fmt, ...)
+#define ESP_HW_LOGD(tag, fmt, ...)
+#define ESP_HW_LOGV(tag, fmt, ...)
 
 #else
 
