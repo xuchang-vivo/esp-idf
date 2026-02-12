@@ -265,7 +265,7 @@ typedef spinlock_t esp_os_spinlock_t;
 #if OS_SPINLOCK == 1
 #define esp_os_exit_critical(lock)          portEXIT_CRITICAL(lock)
 #else
-#define esp_os_exit_critical(lock)          vPortExitCritical()
+#define esp_os_exit_critical(lock)          
 #endif
 
 /**
@@ -353,7 +353,7 @@ typedef spinlock_t esp_os_spinlock_t;
 #if OS_SPINLOCK == 1
 #define esp_os_enter_critical_safe(lock)    portENTER_CRITICAL_SAFE(lock)
 #else
-#define esp_os_enter_critical_safe(lock)    vPortEnterCritical()
+#define esp_os_enter_critical_safe(lock)    
 #endif
 
 /**
@@ -382,7 +382,7 @@ typedef spinlock_t esp_os_spinlock_t;
 #if OS_SPINLOCK == 1
 #define esp_os_exit_critical_safe(lock)     portEXIT_CRITICAL_SAFE(lock)
 #else
-#define esp_os_exit_critical_safe(lock)     vPortExitCritical()
+#define esp_os_exit_critical_safe(lock)     
 #endif
 
 #ifdef __cplusplus

@@ -1,4 +1,5 @@
 #include <hal/uart_hal.h>
+#include <esp_private/periph_ctrl.h>
 #include <esp_clk_tree.h>
 
 uint32_t rust_helper_uart_hal_get_rxfifo_len(uart_hal_context_t *hal);
@@ -16,3 +17,9 @@ void rust_helper_uart_hal_ena_intr_mask(uart_hal_context_t *hal, uint32_t mask);
 int rust_helper_uart_hal_set_baudrate(uart_hal_context_t *hal, uint32_t baud_rate, uint32_t sclk_freq);
 
 int rust_helper_uart_hal_set_sclk(uart_hal_context_t *hal, soc_module_clk_t sclk);
+
+void soc_init(void);
+
+void rust_helper_esp_cpu_inter_enable(uint32_t intr_mask);
+
+void rust_helper_esp_cpu_intr_set_priority(int rv_int_num, int priority);

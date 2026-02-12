@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "freertos/FreeRTOS.h"
+// #include "freertos/FreeRTOS.h"
 #include "esp_attr.h"
 #include "esp_private/periph_ctrl.h"
-#include "esp_private/critical_section.h"
+// #include "esp_private/critical_section.h"
 #include "soc/soc_caps.h"
 #ifdef __PERIPH_CTRL_ALLOW_LEGACY_API
 #include "hal/clk_gate_ll.h"
@@ -17,11 +17,18 @@
 #include "esp_private/esp_modem_clock.h"
 #endif
 
+#define portMUX_TYPE void*
+#define portMUX_INITIALIZER_UNLOCKED NULL
+
 /// @brief For simplicity and backward compatible, we are using the same spin lock for both bus clock on/off and reset
 /// @note  We may want to split them into two spin locks in the future
 static portMUX_TYPE __attribute__((unused)) periph_spinlock = portMUX_INITIALIZER_UNLOCKED;
 
 static uint8_t ref_counts[PERIPH_MODULE_MAX] = {0};
+
+/// FIXME: There might be race condition in rcc module in multi core?
+#define esp_os_enter_critical_safe(lock)
+#define esp_os_exit_critical_safe(lock)
 
 void periph_rcc_enter(void)
 {

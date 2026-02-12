@@ -253,12 +253,7 @@ void esp_log_va(esp_log_config_t config, const char *tag, const char *format, va
         if (ESP_LOG_ENABLED(configs)) { esp_log(ESP_LOG_CONFIG_INIT((configs) | ESP_LOG_CONFIGS_DEFAULT | ESP_LOG_CONFIG_CONSTRAINED_ENV), tag, ESP_LOG_ATTR_STR(format) ESP_LOG_ARGS(__VA_ARGS__)); } \
     } } while(0)
 #else // !(defined(__cplusplus) && (__cplusplus >  201703L))
-#define ESP_LOG_EARLY_IMPL(tag, format, configs, log_tag_letter, ...) do { \
-    if (ESP_LOG_VERSION == 1) { \
-        if (_ESP_LOG_EARLY_ENABLED(configs)) { esp_rom_printf(LOG_FORMAT(log_tag_letter, format), esp_log_timestamp(), tag, ##__VA_ARGS__); } \
-    } else { \
-        if (ESP_LOG_ENABLED(configs)) { esp_log(ESP_LOG_CONFIG_INIT((configs) | ESP_LOG_CONFIGS_DEFAULT | ESP_LOG_CONFIG_CONSTRAINED_ENV), tag, ESP_LOG_ATTR_STR(format) ESP_LOG_ARGS(__VA_ARGS__)); } \
-    } } while(0)
+#define ESP_LOG_EARLY_IMPL(tag, format, configs, log_tag_letter, ...) 
 #endif // !(defined(__cplusplus) && (__cplusplus >  201703L))
 
 #if defined(__cplusplus) && (__cplusplus >  201703L)
